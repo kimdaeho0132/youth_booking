@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="mainBanner" class="carousel slide mb-4" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for b in banners %}
+        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></button>
+        {% endfor %}
+    </div>
+
+    <div class="carousel-inner">
+        {% for b in banners %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <div class="hero">
+                <div class="hero-inner">
+                    <div class="hero-title">{{ b.title }}</div>
+                    <div class="hero-desc">{{ b.desc }}</div>
+                    <a href="{{ b.link }}" class="btn btn-main">{{ b.button }}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainBanner" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainBanner" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card-box p-4 board-box h-100">
+            <div class="tab-head">
+                <div class="section-title mb-0">공지사항</div>
+                <a href="{{ url_for('notices') }}" class="small-muted">more +</a>
+            </div>
+            <ul>
+                {% for n in notices %}
+                <li>
+                    <a href="{{ url_for('notice_detail', nid=n.id) }}">
+                        {% if n.is_pinned %}
+                        <span class="badge text-bg-danger me-2">중요</span>
+                        {% endif %}
+                        [{{ n.category }}] {{ n.title }}
+                    </a>
+                    <span class="small-muted">{{ n.created_at }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card-box p-4 board-box h-100">
+            <div class="tab-head">
+                <div class="section-title mb-0">이용안내</div>
+                <span class="small-muted">안내</span>
+            </div>
+            <ul>
+                <li><span>운영시간</span><span class="small-muted">09:00 ~ 21:00</span></li>
+                <li><span>정기휴관</span><span class="small-muted">매주 월요일</span></li>
+                <li><span>예약가능</span><span class="small-muted">오늘부터 30일 이내</span></li>
+                <li><span>최대예약</span><span class="small-muted">1회 4시간</span></li>
+                <li><span>온라인 취소</span><span class="small-muted">이용일 1일 전까지</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="mb-4">
+    <div class="quick-grid">
+        <div class="quick-card">
+            <div class="quick-num">01</div>
+            <div class="quick-title">프로그램 안내</div>
+            <div class="small-muted mb-3">현재 운영 중인 공지와 프로그램 정보를 확인하세요.</div>
+            <a href="{{ url_for('notices') }}" class="btn btn-outline-secondary btn-sm">바로가기</a>
+        </div>
+        <div class="quick-card">
+            <div class="quick-num">02</div>
+            <div class="quick-title">시설대관</div>
+            <div class="small-muted mb-3">다목적강당, 큰열림마당, 작은열림마당, 창의활동실 이용 신청.</div>
+            <a href="{{ url_for('reserve_page') }}" class="btn btn-outline-secondary btn-sm">바로가기</a>
+        </div>
+        <div class="quick-card">
+            <div class="quick-num">03</div>
+            <div class="quick-title">월간현황</div>
+            <div class="small-muted mb-3">예약, 휴관일, 운영상태를 달력으로 확인할 수 있습니다.</div>
+            <a href="{{ url_for('calendar_view') }}" class="btn btn-outline-secondary btn-sm">바로가기</a>
+        </div>
+        <div class="quick-card">
+            <div class="quick-num">04</div>
+            <div class="quick-title">예약조회</div>
+            <div class="small-muted mb-3">신청자명과 휴대폰 번호로 내 예약 내역을 조회하세요.</div>
+            <a href="{{ url_for('my_reservations') }}" class="btn btn-outline-secondary btn-sm">바로가기</a>
+        </div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="banner-links">
+        <a href="https://open.kakao.com/o/gYRua6fi" target="_blank" class="banner-link banner-1">
+            <div class="fw-bold">오픈카카오톡</div>
+            <div class="small-muted">소식 및 문의</div>
+        </a>
+        <a href="https://band.us/n/a0a5Afs8l861R" target="_blank" class="banner-link banner-2">
+            <div class="fw-bold">밴드</div>
+            <div class="small-muted">활동 사진 및 공지</div>
+        </a>
+        <a href="https://www.instagram.com/taean_cjungus/" target="_blank" class="banner-link banner-3">
+            <div class="fw-bold">인스타그램</div>
+            <div class="small-muted">홍보 콘텐츠</div>
+        </a>
+        <a href="{{ url_for('reserve_page') }}" class="banner-link banner-4">
+            <div class="fw-bold">시설대관 문의</div>
+            <div class="small-muted">온라인 예약 바로가기</div>
+        </a>
+    </div>
+</section>
+
+<section>
+    <div class="section-title">주요 시설 안내</div>
+    <div class="facility-grid">
+        {% for f in facilities %}
+        <div class="card-box facility-card">
+            <img src="{{ f.image }}" alt="{{ f.name }}">
+            <div class="facility-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="fw-bold fs-5">{{ f.name }}</div>
+                    <span class="badge text-bg-light">{{ f.category }}</span>
+                </div>
+                <div class="small-muted mb-2">{{ f.location }} · 정원 {{ f.capacity }}명</div>
+                <div class="mb-3">{{ f.description }}</div>
+                <a href="{{ url_for('reserve_page') }}#facility-{{ f.id }}" class="btn btn-outline-primary btn-sm">예약 바로가기</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

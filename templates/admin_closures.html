@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card-box p-4">
+            <div class="section-title">휴관일 등록</div>
+            <div class="small-muted mb-3">정기휴관일은 매주 월요일입니다. 여기서는 추가 휴관일만 등록합니다.</div>
+
+            <form method="post" class="row g-3">
+                <input type="hidden" name="action" value="create">
+
+                <div class="col-12">
+                    <label class="form-label">휴관일</label>
+                    <input type="date" name="close_date" class="form-control" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">사유</label>
+                    <input type="text" name="reason" class="form-control" placeholder="예: 시설점검, 내부행사, 공휴일" required>
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary w-100">휴관일 등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card-box p-4">
+            <div class="section-title">추가 휴관일 목록</div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>사유</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in rows %}
+                        <tr>
+                            <td>{{ r.close_date }}</td>
+                            <td>{{ r.reason }}</td>
+                            <td>
+                                <form method="post">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="closure_id" value="{{ r.id }}">
+                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">등록된 추가 휴관일이 없습니다.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="small-muted mt-3">참고: 월요일은 시스템에서 자동으로 예약 불가 처리됩니다.</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

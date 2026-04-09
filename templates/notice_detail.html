@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-box p-4">
+    <div class="mb-2">
+        <span class="badge text-bg-light">{{ row.category }}</span>
+        {% if row.is_pinned %}
+        <span class="badge text-bg-danger">중요</span>
+        {% endif %}
+    </div>
+    <div class="section-title mb-2">{{ row.title }}</div>
+    <div class="small-muted mb-4">{{ row.created_at }}</div>
+    <div style="white-space:pre-line; line-height:1.8;">{{ row.content }}</div>
+    <div class="mt-4">
+        <a href="{{ url_for('notices') }}" class="btn btn-outline-secondary">목록으로</a>
+    </div>
+</div>
+
+{% endblock %}

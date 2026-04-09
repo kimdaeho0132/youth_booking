@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card-box p-4">
+            <div class="section-title">관리자 로그인</div>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button class="btn btn-dark w-100">로그인</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

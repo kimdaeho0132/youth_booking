@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card-box p-4">
+            <div class="section-title">시설 등록</div>
+            <form method="post" class="row g-3">
+                <input type="hidden" name="action" value="create">
+
+                <div class="col-12">
+                    <label class="form-label">시설명</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">분류</label>
+                    <input type="text" name="category" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">위치</label>
+                    <input type="text" name="location" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">정원</label>
+                    <input type="number" name="capacity" class="form-control" min="1" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">설명</label>
+                    <textarea name="description" rows="3" class="form-control"></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">부가설비</label>
+                    <textarea name="equipment" rows="2" class="form-control"></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">이용안내</label>
+                    <textarea name="notice" rows="2" class="form-control"></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">이미지 URL</label>
+                    <input type="text" name="image" class="form-control" placeholder="https://...">
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary w-100">시설 등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        {% for f in facilities %}
+        <div class="card-box p-4 mb-3">
+            <form method="post" class="row g-3">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="facility_id" value="{{ f.id }}">
+
+                <div class="col-md-6">
+                    <label class="form-label">시설명</label>
+                    <input type="text" name="name" class="form-control" value="{{ f.name }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">분류</label>
+                    <input type="text" name="category" class="form-control" value="{{ f.category }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">정원</label>
+                    <input type="number" name="capacity" class="form-control" value="{{ f.capacity }}" min="1" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">위치</label>
+                    <input type="text" name="location" class="form-control" value="{{ f.location }}" required>
+                </div>
+
+                <div class="col-md-8 d-flex align-items-end">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_active" id="active{{ f.id }}" {% if f.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="active{{ f.id }}">사용자 화면에 노출</label>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">설명</label>
+                    <textarea name="description" rows="2" class="form-control">{{ f.description }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">부가설비</label>
+                    <textarea name="equipment" rows="2" class="form-control">{{ f.equipment }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">이용안내</label>
+                    <textarea name="notice" rows="2" class="form-control">{{ f.notice }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">이미지 URL</label>
+                    <input type="text" name="image" class="form-control" value="{{ f.image }}">
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary">저장</button>
+                </div>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %} 

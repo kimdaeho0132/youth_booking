@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h3 class="mb-3">관리자 예약 관리</h3>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>시설</th>
+                        <th>예약일</th>
+                        <th>시간</th>
+                        <th>신청자</th>
+                        <th>연락처</th>
+                        <th>인원</th>
+                        <th>목적</th>
+                        <th>상태</th>
+                        <th>변경</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in rows %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.facility_name }}</td>
+                        <td>{{ r.reserve_date }}</td>
+                        <td>{{ r.slot }}</td>
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.phone }}</td>
+                        <td>{{ r.people_count }}</td>
+                        <td style="min-width: 180px;">{{ r.purpose }}</td>
+                        <td>{{ STATUS_KR[r.status] }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin_update', reservation_id=r.id) }}" class="d-flex gap-2">
+                                <select name="status" class="form-select form-select-sm">
+                                    <option value="PENDING" {% if r.status == "PENDING" %}selected{% endif %}>승인대기</option>
+                                    <option value="APPROVED" {% if r.status == "APPROVED" %}selected{% endif %}>승인완료</option>
+                                    <option value="REJECTED" {% if r.status == "REJECTED" %}selected{% endif %}>반려</option>
+                                    <option value="CANCELLED" {% if r.status == "CANCELLED" %}selected{% endif %}>취소</option>
+                                </select>
+                                <button class="btn btn-sm btn-primary">저장</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

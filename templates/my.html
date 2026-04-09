@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-box p-4">
+    <div class="section-title">예약 조회</div>
+
+    <form method="post" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label">신청자명</label>
+            <input type="text" name="name" class="form-control" value="{{ name }}" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">휴대폰 번호</label>
+            <input type="text" name="phone" class="form-control" value="{{ phone }}" required>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label d-block">&nbsp;</label>
+            <button class="btn btn-primary w-100">조회</button>
+        </div>
+    </form>
+
+    {% if reservations is not none %}
+        {% if reservations %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>시설</th>
+                            <th>예약일</th>
+                            <th>시간</th>
+                            <th>인원</th>
+                            <th>상태</th>
+                            <th>관리자 메모</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in reservations %}
+                        <tr>
+                            <td>
+                                <strong>{{ r.facility_name }}</strong><br>
+                                <span class="small-muted">{{ r.category }} · {{ r.location }}</span>
+                            </td>
+                            <td>{{ r.reserve_date }}</td>
+                            <td>{{ hour_range_label(r.start_hour, r.end_hour) }}</td>
+                            <td>{{ r.people_count }}명</td>
+                            <td>{{ STATUS_KR[r.status] }}</td>
+                            <td>{{ r.admin_memo or "-" }}</td>
+                            <td>
+                                {% if r.status != "CANCELLED" %}
+                                <form method="post" action="{{ url_for('cancel_reservation', reservation_id=r.id) }}">
+                                    <input type="hidden" name="name" value="{{ name }}">
+                                    <input type="hidden" name="phone" value="{{ phone }}">
+                                    <button class="btn btn-sm btn-outline-danger">취소</button>
+                                </form>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="small-muted">
+                                <strong>사용 목적:</strong> {{ r.purpose }}
+                                {% if r.org_name %}
+                                / <strong>단체명:</strong> {{ r.org_name }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}

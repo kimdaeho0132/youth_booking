@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-box p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <div class="section-title mb-1">관리자 대시보드</div>
+            <div class="small-muted">예약 신청 현황 확인 및 승인 상태 변경</div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ url_for('admin_facilities') }}" class="btn btn-outline-dark btn-sm">시설관리</a>
+            <a href="{{ url_for('admin_closures') }}" class="btn btn-outline-dark btn-sm">휴관관리</a>
+            <a href="{{ url_for('admin_notices') }}" class="btn btn-outline-dark btn-sm">공지관리</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger btn-sm">로그아웃</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card-box p-3 text-center">
+            <div class="small-muted">승인대기</div>
+            <div class="fs-4 fw-bold text-warning">{{ counts["PENDING"] }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-box p-3 text-center">
+            <div class="small-muted">승인완료</div>
+            <div class="fs-4 fw-bold text-success">{{ counts["APPROVED"] }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-box p-3 text-center">
+            <div class="small-muted">반려</div>
+            <div class="fs-4 fw-bold text-danger">{{ counts["REJECTED"] }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-box p-3 text-center">
+            <div class="small-muted">취소</div>
+            <div class="fs-4 fw-bold text-secondary">{{ counts["CANCELLED"] }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card-box p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">예약일</label>
+            <input type="date" name="date" class="form-control" value="{{ q_date }}">
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">상태</label>
+            <select name="status" class="form-select">
+                <option value="">전체</option>
+                {% for k, v in STATUS_KR.items() %}
+                <option value="{{ k }}" {% if q_status == k %}selected{% endif %}>{{ v }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">시설</label>
+            <select name="facility_id" class="form-select">
+                <option value="">전체</option>
+                {% for f in facilities %}
+                <option value="{{ f.id }}" {% if q_facility == f.id|string %}selected{% endif %}>{{ f.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-primary w-100">조회</button>
+
+        </div>
+    </form>
+</div>
+
+<div class="card-box p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div class="section-title mb-0">예약 목록</div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <form method="post" action="{{ url_for('admin_delete_all_expired_reservations') }}"
+                  onsubmit="return confirm('만료된 예약을 전체 삭제할까요?');">
+                <button class="btn btn-outline-danger btn-sm">만료 전체삭제</button>
+            </form>
+
+            <form method="post" action="{{ url_for('admin_delete_selected_reservations') }}"
+                  id="deleteSelectedForm"
+                  onsubmit="return confirmDeleteSelected();">
+                <div id="deleteSelectedInputs"></div>
+                <button type="submit" class="btn btn-danger btn-sm">선택 삭제</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th style="width:56px;">
+                        <input type="checkbox" id="checkAllExpired">
+                    </th>
+                    <th>ID</th>
+                    <th>예약일</th>
+                    <th>시간</th>
+                    <th>시설</th>
+                    <th>신청자</th>
+                    <th>연락처</th>
+                    <th>인원</th>
+                    <th>목적</th>
+                    <th>상태 변경</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if rows %}
+                    {% for r in rows %}
+                    {% set expired = is_expired_reservation(r.reserve_date, r.end_hour) %}
+                    <tr {% if expired %}style="background:#fff8f1;"{% endif %}>
+                        <td>
+                            {% if expired %}
+                                <input
+                                    type="checkbox"
+                                    class="expired-check"
+                                    value="{{ r.id }}"
+                                >
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ r.id }}</td>
+                        <td>
+                            {{ r.reserve_date }}
+                            {% if expired %}
+                                <br><span class="badge text-bg-warning mt-1">만료</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ hour_range_label(r.start_hour, r.end_hour) }}</td>
+                        <td>
+                            <strong>{{ r.facility_name }}</strong><br>
+                            <span class="small-muted">{{ r.category }} · {{ r.location }}</span>
+                        </td>
+                        <td>
+                            {{ r.name }}
+                            {% if r.org_name %}
+                            <br><span class="small-muted">{{ r.org_name }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ r.phone }}</td>
+                        <td>{{ r.people_count }}명</td>
+                        <td style="min-width:180px;">{{ r.purpose }}</td>
+                        <td style="min-width:260px;">
+                            <form method="post" action="{{ url_for('admin_update_reservation', reservation_id=r.id) }}" class="d-grid gap-2">
+                                <select name="status" class="form-select form-select-sm">
+                                    <option value="PENDING" {% if r.status == "PENDING" %}selected{% endif %}>승인대기</option>
+                                    <option value="APPROVED" {% if r.status == "APPROVED" %}selected{% endif %}>승인완료</option>
+                                    <option value="REJECTED" {% if r.status == "REJECTED" %}selected{% endif %}>반려</option>
+                                    <option value="CANCELLED" {% if r.status == "CANCELLED" %}selected{% endif %}>취소</option>
+                                </select>
+
+                                <input
+                                    type="text"
+                                    name="admin_memo"
+                                    value="{{ r.admin_memo }}"
+                                    class="form-control form-control-sm"
+                                    placeholder="관리자 메모 입력"
+                                >
+
+                                <button class="btn btn-sm btn-primary">저장</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="text-center py-4 text-muted">조회된 예약이 없습니다.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const checkAll = document.getElementById("checkAllExpired");
+    const deleteForm = document.getElementById("deleteSelectedForm");
+    const hiddenBox = document.getElementById("deleteSelectedInputs");
+
+    function getExpiredChecks() {
+        return document.querySelectorAll(".expired-check");
+    }
+
+    function syncHiddenInputs() {
+        if (!hiddenBox) return;
+        hiddenBox.innerHTML = "";
+
+        getExpiredChecks().forEach(chk => {
+            if (chk.checked) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "reservation_ids";
+                input.value = chk.value;
+                hiddenBox.appendChild(input);
+            }
+        });
+    }
+
+    if (checkAll) {
+        checkAll.addEventListener("change", function () {
+            getExpiredChecks().forEach(chk => {
+                chk.checked = this.checked;
+            });
+            syncHiddenInputs();
+        });
+    }
+
+    getExpiredChecks().forEach(chk => {
+        chk.addEventListener("change", function () {
+            const checks = Array.from(getExpiredChecks());
+            const checkedCount = checks.filter(v => v.checked).length;
+
+            if (checkAll) {
+                checkAll.checked = checks.length > 0 && checkedCount === checks.length;
+            }
+
+            syncHiddenInputs();
+        });
+    });
+
+    if (deleteForm) {
+        deleteForm.addEventListener("submit", function () {
+            syncHiddenInputs();
+        });
+    }
+
+    window.confirmDeleteSelected = function () {
+        syncHiddenInputs();
+
+        const count = document.querySelectorAll(
+            "#deleteSelectedInputs input[name='reservation_ids']"
+        ).length;
+
+        if (count === 0) {
+            alert("선택된 만료 예약이 없습니다.");
+            return false;
+        }
+
+        return confirm("선택한 만료 예약을 삭제할까요?");
+    };
+});
+</script>
+
+{% endblock %}

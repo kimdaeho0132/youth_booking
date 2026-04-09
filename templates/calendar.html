@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <div class="section-title mb-1">월간 예약 현황</div>
+        <div class="small-muted">{{ year }}년 {{ month }}월</div>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">이전달</a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('calendar_view') }}">이번달</a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">다음달</a>
+    </div>
+</div>
+
+<div class="card-box p-4">
+    <div class="table-responsive">
+        <table class="table calendar-table align-middle">
+            <thead>
+                <tr>
+                    <th>일</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in month_matrix %}
+                <tr>
+                    {% for d in week %}
+                        {% set in_month = (d.month == month) %}
+                        {% set day_key = d.isoformat() %}
+                        {% set day_status = status_map.get(day_key, {"PENDING": 0, "APPROVED": 0}) %}
+                        {% set is_monday_closed = (d.weekday() == WEEKLY_CLOSED_WEEKDAY) %}
+                        {% set custom_reason = closure_map.get(day_key) %}
+                        <td>
+                            <div class="calendar-day {% if not in_month %}out{% endif %} {% if d == today_obj %}today{% endif %} {% if is_monday_closed or custom_reason %}closed{% endif %}">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <strong>{{ d.day }}</strong>
+                                    {% if in_month and d >= today_obj and not is_monday_closed and not custom_reason %}
+                                        <a href="{{ url_for('reserve_page', date=day_key) }}" class="btn btn-sm btn-light">보기</a>
+                                    {% endif %}
+                                </div>
+
+                                {% if is_monday_closed %}
+                                    <div class="mini-badge mini-closed">월요일 휴관</div>
+                                {% endif %}
+
+                                {% if custom_reason %}
+                                    <div class="mini-badge mini-closed">{{ custom_reason }}</div>
+                                {% endif %}
+
+                                {% if day_status["PENDING"] > 0 %}
+                                    <div class="mini-badge mini-pending">대기 {{ day_status["PENDING"] }}</div>
+                                {% endif %}
+
+                                {% if day_status["APPROVED"] > 0 %}
+                                    <div class="mini-badge mini-approved">확정 {{ day_status["APPROVED"] }}</div>
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

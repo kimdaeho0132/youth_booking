@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block body_class %}reserve-page{% endblock %}
+{% block content %}
+
+<div class="card-box p-4 mb-4" style="background:linear-gradient(90deg,#eef9fc,#ffffff);">
+    <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+            <div class="section-title mb-2">시설예약</div>
+            <div class="small-muted">
+                태안군청소년수련관 시설은 온라인 예약 후 관리자 승인으로 확정됩니다.
+            </div>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <a href="{{ url_for('calendar_view') }}" class="btn btn-outline-primary">월간현황 보기</a>
+        </div>
+    </div>
+</div>
+
+<div class="card-box p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">이용 날짜</label>
+            <input
+                type="date"
+                name="date"
+                class="form-control"
+                value="{{ selected_date }}"
+                min="{{ today }}"
+                max="{{ max_date }}"
+            >
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">조회</button>
+        </div>
+    </form>
+</div>
+
+{% if closed %}
+<div class="alert alert-danger">
+    <strong>휴관일입니다.</strong> {{ closed_reason }}
+</div>
+{% endif %}
+
+{% for f in facilities %}
+<div class="card-box mb-4 overflow-hidden" id="facility-{{ f.id }}">
+    <div class="row g-0">
+        <div class="col-lg-4">
+            <img
+                src="{{ f.image }}"
+                alt="{{ f.name }}"
+                class="reserve-facility-img"
+                style="width:100%;height:100%;min-height:260px;object-fit:cover;"
+            >
+        </div>
+
+        <div class="col-lg-8">
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                    <div>
+                        <div class="fs-4 fw-bold">{{ f.name }}</div>
+                        <div class="small-muted">
+                            {{ f.category }} · {{ f.location }} · 정원 {{ f.capacity }}명
+                        </div>
+                    </div>
+                    <span class="badge text-bg-light">{{ f.category }}</span>
+                </div>
+
+                <p class="mb-2">{{ f.description }}</p>
+                <div class="small-muted mb-1"><strong>설비:</strong> {{ f.equipment }}</div>
+                <div class="small-muted mb-3"><strong>안내:</strong> {{ f.notice }}</div>
+
+                <div class="fw-bold mb-2">시간대 현황</div>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    {% for h in range(OPEN_HOUR, CLOSE_HOUR) %}
+                        {% if closed %}
+                            <span class="hour-box hour-closed">{{ "%02d:00"|format(h) }}</span>
+
+                        {% else %}
+                            {% set st = booking_map.get((f.id, h)) %}
+
+                            {% if st == "CLOSED" %}
+                                <span class="hour-box hour-closed">{{ "%02d:00"|format(h) }}</span>
+
+                            {% elif st == "APPROVED" %}
+                                <span class="hour-box hour-booked">{{ "%02d:00"|format(h) }}</span>
+
+                            {% elif st == "PENDING" %}
+                                <span class="hour-box hour-pending">{{ "%02d:00"|format(h) }}</span>
+
+                            {% else %}
+                                <button
+                                    type="button"
+                                    class="hour-box hour-free time-btn"
+                                    data-hour="{{ h }}"
+                                    data-fid="{{ f.id }}">
+                                    {{ "%02d:00"|format(h) }}
+                                </button>
+                            {% endif %}
+
+                        {% endif %}
+                        
+                    {% endfor %}
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button
+                        class="btn btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#form-{{ f.id }}"
+                        aria-expanded="false"
+                        {% if closed %}disabled{% endif %}
+                    >
+                        예약 신청 열기
+                    </button>
+
+                    <a href="#top" class="btn btn-outline-secondary">위로</a>
+                </div>
+
+                <div class="collapse mt-4" id="form-{{ f.id }}">
+                    <div class="card-box p-3" style="background:var(--surface2);">
+                        <form method="post" action="{{ url_for('reserve') }}" class="row g-3">
+                            <input type="hidden" name="facility_id" value="{{ f.id }}">
+                            <input type="hidden" name="reserve_date" value="{{ selected_date }}">
+
+                            <div class="col-md-3">
+                                <label class="form-label">시작</label>
+                                <select name="start_hour" class="form-select" required>
+                                    <option value="">선택</option>
+                                    {% for h in range(OPEN_HOUR, CLOSE_HOUR) %}
+                                        <option value="{{ h }}">{{ "%02d:00"|format(h) }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">종료</label>
+                                <select name="end_hour" class="form-select" required>
+                                    <option value="">선택</option>
+                                    {% for h in range(OPEN_HOUR + 1, CLOSE_HOUR + 1) %}
+                                        <option value="{{ h }}">{{ "%02d:00"|format(h) }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">이름</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">전화번호</label>
+                                <input type="text" name="phone" class="form-control" placeholder="01012345678" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">단체명</label>
+                                <input type="text" name="org_name" class="form-control">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">인원</label>
+                                <input
+                                    type="number"
+                                    name="people_count"
+                                    class="form-control"
+                                    min="1"
+                                    max="{{ f.capacity }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">날짜</label>
+                                <input type="text" class="form-control" value="{{ selected_date }}" disabled>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">사용 목적</label>
+                                <textarea name="purpose" class="form-control" rows="3" required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" name="agree_privacy" class="form-check-input" required>
+                                    <label class="form-check-label">개인정보 수집 및 이용에 동의합니다.</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex gap-2 flex-wrap">
+                                <button class="btn btn-primary">예약 신청</button>
+                                <button
+                                    class="btn btn-outline-secondary"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#form-{{ f.id }}"
+                                >
+                                    닫기
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".time-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const hour = this.dataset.hour;
+            const fid = this.dataset.fid;
+
+            const form = document.querySelector(`#form-${fid}`);
+            if (!form) return;
+
+            new bootstrap.Collapse(form, { toggle: true });
+
+            const startSelect = form.querySelector("select[name='start_hour']");
+            const endSelect = form.querySelector("select[name='end_hour']");
+
+            if (startSelect) startSelect.value = hour;
+            if (endSelect) endSelect.value = parseInt(hour) + 1;
+
+            form.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+    });
+});
+</script>
+
+{% endblock %}

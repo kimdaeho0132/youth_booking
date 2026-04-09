@@ -1,0 +1,1446 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>태안군청소년수련관</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#eef7fb;
+            --bg2:#e5f1f8;
+            --surface:#ffffff;
+            --surface2:#f7fbfe;
+            --text:#1b2b36;
+            --muted:#6a7d89;
+            --line:#d6e6ef;
+            --brand:#14789c;
+            --brand-dark:#0d5c79;
+            --nav1:#197da2;
+            --nav2:#57b7d2;
+            --accent:#dff5fb;
+            --shadow:0 10px 24px rgba(18,79,110,.08);
+            --shadow-soft:0 4px 12px rgba(18,79,110,.06);
+            --danger:#c75b5b;
+            --ok:#1d8a5b;
+            --warn:#9a6b11;
+        }
+
+        html[data-theme="dark"]{
+            --bg:#08131d;
+            --bg2:#0c1824;
+            --surface:#12202c;
+            --surface2:#162734;
+            --text:#e8f2f8;
+            --muted:#9db1bf;
+            --line:#29414f;
+            --brand:#6fd0ea;
+            --brand-dark:#47a9c6;
+            --nav1:#0d3d58;
+            --nav2:#195d7f;
+            --accent:#12384a;
+            --shadow:0 12px 28px rgba(0,0,0,.28);
+            --shadow-soft:0 6px 16px rgba(0,0,0,.22);
+            --danger:#ff9d9d;
+            --ok:#7bd8a9;
+            --warn:#f1cb6c;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            background:
+                radial-gradient(circle at top right, rgba(95,181,214,.15), transparent 22%),
+                radial-gradient(circle at left top, rgba(185,234,247,.18), transparent 20%),
+                linear-gradient(180deg,var(--bg),var(--bg2));
+            color:var(--text);
+            font-family:Arial,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+            transition:background .2s ease,color .2s ease;
+        }
+
+        a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        .topbar{
+            background:rgba(255,255,255,.62);
+            backdrop-filter:blur(10px);
+            border-bottom:1px solid var(--line);
+            font-size:.92rem;
+        }
+
+        html[data-theme="dark"] .topbar{
+            background:rgba(18,32,44,.8);
+        }
+
+        .topbar a{
+            color:var(--muted);
+            margin-left:14px;
+            font-weight:600;
+        }
+
+        .topbar a:hover{
+            color:var(--brand);
+        }
+
+        .site-header{
+            background:transparent;
+        }
+
+        .brand-wrap{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+            padding:20px 0;
+        }
+
+        .brand-left{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .brand-link{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .mark-shell{
+            width:62px;
+            height:62px;
+            border-radius:18px;
+            background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(238,248,252,.92));
+            border:1px solid var(--line);
+            box-shadow:var(--shadow);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            overflow:hidden;
+            flex:0 0 auto;
+        }
+
+        html[data-theme="dark"] .mark-shell{
+            background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+        }
+
+        .taean-mark{
+            width:50px;
+            height:50px;
+            object-fit:contain;
+            display:block;
+        }
+
+        .mark-fallback{
+            display:none;
+            width:50px;
+            height:50px;
+            border-radius:14px;
+            background:linear-gradient(135deg,var(--nav1),var(--nav2));
+            color:#fff;
+            font-size:.72rem;
+            font-weight:800;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            line-height:1.1;
+            padding:4px;
+        }
+
+        .brand-logo{
+            font-size:2rem;
+            font-weight:900;
+            color:var(--brand);
+            letter-spacing:-0.03em;
+            line-height:1.1;
+        }
+
+        .brand-sub{
+            color:var(--muted);
+            font-size:.95rem;
+            margin-top:4px;
+        }
+
+        .header-right{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+        }
+
+        .mini-badge{
+            background:var(--surface);
+            border:1px solid var(--line);
+            border-radius:999px;
+            padding:8px 12px;
+            font-size:.86rem;
+            color:var(--muted);
+            font-weight:700;
+            box-shadow:var(--shadow-soft);
+        }
+
+        .sns-wrap{
+            display:flex;
+            gap:10px;
+            align-items:center;
+        }
+
+        .sns-icon{
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:800;
+            box-shadow:var(--shadow-soft);
+            transition:.2s ease;
+        }
+
+        .sns-icon:hover{
+            transform:translateY(-2px);
+            opacity:.94;
+        }
+
+        .sns-kakao{background:#FEE500;color:#111;}
+        .sns-band{background:#20C05C;color:#fff;}
+        .sns-insta{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;}
+
+        .theme-toggle{
+            border:1px solid var(--line);
+            background:linear-gradient(180deg,var(--surface),var(--surface2));
+            color:var(--text);
+            border-radius:999px;
+            padding:9px 15px;
+            font-weight:800;
+            cursor:pointer;
+            box-shadow:var(--shadow-soft);
+            transition:.2s ease;
+        }
+
+        .theme-toggle:hover{
+            transform:translateY(-1px);
+        }
+
+        .gnb-wrap{
+            margin-bottom:18px;
+            position:sticky;
+            top:8px;;
+            z-index:1100;
+        }
+
+        .gnb{
+            background:linear-gradient(90deg,var(--nav1),var(--nav2));
+            border-radius:18px;
+            box-shadow:0 10px 24px rgba(20,120,156,.16);
+            position:relative;
+            overflow:visible;
+            backdrop-filter:blur(8px);
+        }
+
+        .gnb-menu{
+            display:flex;
+            align-items:stretch;
+        }
+
+        .gnb-item{
+            flex:1;
+            position:relative;
+        }
+
+        .gnb-main{
+            color:#fff;
+            font-weight:800;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:16px 14px;
+            min-height:58px;
+            cursor:pointer;
+            transition:background .25s ease;
+            user-select:none;
+        }
+
+        .gnb-item:hover .gnb-main,
+        .gnb-item.open .gnb-main{
+            background:rgba(255,255,255,.12);
+        }
+
+        .mega-menu{
+            position:absolute;
+            top:100%;
+            left:0;
+            width:100%;
+            min-width:260px;
+            background:rgba(255,255,255,.97);
+            border:1px solid var(--line);
+            border-top:none;
+            box-shadow:0 18px 34px rgba(0,0,0,.12);
+            padding:20px 22px;
+            opacity:0;
+            visibility:hidden;
+            transform:translateY(14px);
+            transition:
+                opacity .28s ease,
+                transform .32s ease,
+                visibility .32s ease;
+            pointer-events:none;
+        }
+
+        .gnb-item:hover .mega-menu,
+        .gnb-item.open .mega-menu{
+            opacity:1;
+            visibility:visible;
+            transform:translateY(0);
+            pointer-events:auto;
+        }
+
+        .mega-inner{
+            display:block;
+        }
+
+        .mega-col-title{
+            font-size:1.02rem;
+            font-weight:900;
+            color:var(--brand);
+            margin-bottom:12px;
+            line-height:1.3;
+            word-break:keep-all;
+        }
+
+        .mega-links{
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+
+        .mega-links li{
+            margin-bottom:8px;
+        }
+
+        .mega-links li:last-child{
+            margin-bottom:0;
+        }
+
+        .mega-links a{
+            color:var(--text);
+            font-weight:700;
+            display:block;
+            padding:5px 0;
+            line-height:1.45;
+            word-break:keep-all;
+            transition:color .2s ease, transform .2s ease;
+        }
+
+        .mega-links a:hover{
+            color:var(--brand);
+            transform:translateX(2px);
+        }
+
+        html[data-theme="dark"] .mega-menu{
+            background:rgba(18,32,44,.98);
+            border-color:var(--line);
+        }
+
+        html[data-theme="dark"] .mega-links a{
+            color:var(--text);
+        }
+
+        @media (max-width: 991px){
+            .gnb{
+                border-radius:14px;
+            }
+
+            .gnb-wrap{
+                position:static;
+                top:6px;
+                padding-top:0;
+            }
+
+            .gnb-menu{
+                display:block;
+            }
+
+            .gnb-item{
+                border-bottom:1px solid rgba(255,255,255,.12);
+            }
+
+            .gnb-item:last-child{
+                border-bottom:none;
+            }
+
+            .gnb-main{
+                justify-content:space-between;
+                padding:14px 16px;
+                min-height:auto;
+            }
+
+            .gnb-main::after{
+                content:"▾";
+                font-size:.9rem;
+                opacity:.9;
+            }
+
+            .mega-menu{
+                position:static;
+                width:auto;
+                min-width:0;
+                background:rgba(255,255,255,.08);
+                border:none;
+                border-top:1px solid rgba(255,255,255,.12);
+                box-shadow:none;
+                padding:14px 16px 18px;
+                opacity:1;
+                visibility:visible;
+                transform:none;
+                display:none;
+                pointer-events:auto;
+            }
+
+            .gnb-item.open .mega-menu{
+                display:block;
+            }
+
+            .gnb-item:hover .mega-menu{
+                opacity:1;
+                visibility:visible;
+                transform:none;
+                pointer-events:auto;
+            }
+
+            .mega-col-title{
+                color:#fff;
+                margin-bottom:8px;
+                font-size:.95rem;
+            }
+
+            .mega-links a{
+                color:#eef8fc;
+                padding:6px 0;
+                font-size:.92rem;
+            }
+        }
+        .main-container{
+            padding:10px 0 56px;
+        }
+
+        .card-box{
+            background:linear-gradient(180deg,var(--surface),var(--surface2));
+            border:1px solid var(--line);
+            border-radius:18px;
+            box-shadow:var(--shadow);
+        }
+
+        .section-title{
+            font-size:1.18rem;
+            font-weight:900;
+            margin-bottom:14px;
+            letter-spacing:-0.02em;
+        }
+
+        .small-muted{
+            color:var(--muted);
+            font-size:.93rem;
+        }
+
+        .hero{
+            position:relative;
+            background:
+                linear-gradient(120deg, rgba(14,111,141,.82), rgba(59,170,196,.58)),
+                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+            border-radius:24px;
+            color:#fff;
+            min-height:420px;
+            display:flex;
+            align-items:center;
+            overflow:hidden;
+            box-shadow:0 24px 48px rgba(21,111,149,.18);
+        }
+
+        .hero::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+            pointer-events:none;
+        }
+
+        .hero-inner{
+            max-width:740px;
+            padding:56px 120px;
+            position:relative;
+            z-index:2;
+        }
+
+        .hero-title{
+            font-size:2.8rem;
+            font-weight:900;
+            line-height:1.16;
+            margin-bottom:14px;
+            letter-spacing:-0.04em;
+        }
+
+        .hero-desc{
+            font-size:1.05rem;
+            opacity:.98;
+            margin-bottom:22px;
+        }
+
+        .btn-main{
+            background:#fff;
+            color:var(--brand-dark);
+            border:none;
+            font-weight:900;
+            padding:12px 18px;
+            border-radius:12px;
+            box-shadow:0 8px 20px rgba(0,0,0,.14);
+        }
+
+        .btn-main:hover{
+            background:#f4fbff;
+        }
+
+        .btn-sub{
+            background:transparent;
+            color:#fff;
+            border:1px solid rgba(255,255,255,.78);
+            font-weight:800;
+            padding:12px 18px;
+            border-radius:12px;
+        }
+
+        .board-box .tab-head{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-bottom:1px solid var(--line);
+            padding-bottom:10px;
+            margin-bottom:10px;
+        }
+
+        .board-box ul{
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+
+        .board-box li{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:9px 0;
+            border-bottom:1px solid rgba(128,128,128,.11);
+        }
+
+        .board-box li:last-child{
+            border-bottom:none;
+        }
+
+        .quick-grid{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:14px;
+        }
+
+        .quick-card{
+            background:linear-gradient(180deg,var(--surface),var(--surface2));
+            border:1px solid var(--line);
+            border-radius:18px;
+            padding:22px;
+            min-height:188px;
+            box-shadow:var(--shadow-soft);
+        }
+
+        .quick-num{
+            font-size:2.2rem;
+            line-height:1;
+            font-weight:900;
+            color:#b8dbe7;
+            margin-bottom:16px;
+        }
+
+        .quick-title{
+            font-size:1.04rem;
+            font-weight:900;
+            margin-bottom:8px;
+        }
+
+        .banner-links{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:12px;
+        }
+
+        .banner-link{
+            border-radius:18px;
+            padding:18px;
+            color:#173040;
+            font-weight:800;
+            min-height:100px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            border:1px solid rgba(255,255,255,.4);
+            box-shadow:var(--shadow-soft);
+        }
+
+        html[data-theme="dark"] .banner-link{
+            color:#e7f1f7;
+            border-color:var(--line);
+        }
+
+        .banner-1{background:linear-gradient(135deg,#dff6ff,#c9ecff);}
+        .banner-2{background:linear-gradient(135deg,#dffbf0,#c5f3df);}
+        .banner-3{background:linear-gradient(135deg,#e7e7ff,#f0dcff);}
+        .banner-4{background:linear-gradient(135deg,#dff3ff,#d9e7ff);}
+
+        .facility-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+        }
+
+        .facility-card{
+            overflow:hidden;
+        }
+
+        .facility-card img{
+            width:100%;
+            height:220px;
+            object-fit:cover;
+        }
+
+        .facility-body{
+            padding:18px;
+        }
+
+        .right-fixed-menu{
+            position:fixed;
+            right:16px;
+            top:250px;
+            z-index:900;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+
+        .right-fixed-menu a{
+            background:var(--surface);
+            border:1px solid #cde2eb;
+            color:var(--brand);
+            width:84px;
+            text-align:center;
+            padding:10px 6px;
+            border-radius:14px;
+            font-weight:800;
+            font-size:.82rem;
+            box-shadow:var(--shadow-soft);
+            line-height:1.2;
+        }
+
+        .right-fixed-menu .icon{
+            display:block;
+            font-size:1.15rem;
+            margin-bottom:5px;
+        }
+
+        body.reserve-page .right-fixed-menu{
+            display:none;
+        }
+
+        .footer{
+            background:linear-gradient(180deg,#0f4155,#103849);
+            color:#d6e7ee;
+            padding:36px 0;
+            margin-top:44px;
+        }
+
+        .table td,.table th{
+            vertical-align:middle;
+            color:var(--text);
+            border-color:var(--line);
+        }
+
+        .form-control,
+        .form-select{
+            background:var(--surface);
+            color:var(--text);
+            border-color:var(--line);
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+            background:var(--surface);
+            color:var(--text);
+            border-color:var(--brand);
+            box-shadow:0 0 0 .2rem rgba(22,122,160,.12);
+        }
+
+        .hour-box{
+            min-width:84px;
+            text-align:center;
+            padding:7px 10px;
+            border-radius:10px;
+            font-size:.9rem;
+            font-weight:700;
+            border:1px solid var(--line);
+            background:var(--surface);
+            color:var(--text);
+        }
+
+        .hour-free{ background:#eefbf2; color:var(--ok); border-color:#b7e4c7; }
+        .hour-pending{ background:#fff8e1; color:var(--warn); border-color:#f3d98b; }
+        .hour-booked{ background:#f3f4f6; color:#4b5563; border-color:#d1d5db; }
+        .hour-closed{ background:#fdecec; color:#b42318; border-color:#f5b7b1; }
+        
+        .time-btn{
+            cursor:pointer;
+            transition:0.2s;
+        }
+
+        .time-btn:hover{
+            transform:scale(1.05);
+            background:#d1f2dc;
+        }
+
+        html[data-theme="dark"] .hour-booked{
+            background:#2b3642;
+            color:#d2dde8;
+            border-color:#44515e;
+        }
+
+        .calendar-table th,.calendar-table td{
+            width:14.285%;
+            vertical-align:top;
+        }
+
+        .calendar-day{
+            min-height:120px;
+            border-radius:14px;
+            padding:10px;
+            background:var(--surface);
+            border:1px solid var(--line);
+        }
+
+        .calendar-day.out{
+            background:var(--surface2);
+            color:#9ca3af;
+        }
+
+        .calendar-day.closed{
+            background:#fff5f5;
+            border-color:#f3caca;
+        }
+
+        html[data-theme="dark"] .calendar-day.closed{
+            background:#3a2226;
+            border-color:#6a3d43;
+        }
+
+        .calendar-day.today{
+            outline:2px solid #bde8f2;
+        }
+
+        .mini-pill{
+            display:inline-block;
+            font-size:.75rem;
+            border-radius:999px;
+            padding:3px 8px;
+            margin-top:4px;
+            margin-right:4px;
+        }
+
+        .mini-pending{background:#fff4cc;color:#8a5a00;}
+        .mini-approved{background:#e8f5e9;color:#157347;}
+        .mini-closed{background:#fdecec;color:#b42318;}
+
+        #mainBanner{
+            position:relative;
+        }
+
+        #mainBanner .carousel-inner{
+            overflow:hidden;
+            border-radius:24px;
+        }
+
+        #mainBanner .carousel-control-prev,
+        #mainBanner .carousel-control-next{
+            width:56px;
+            height:56px;
+            top:50%;
+            bottom:auto;
+            transform:translateY(-50%);
+            background:rgba(255,255,255,.92);
+            border-radius:50%;
+            opacity:1;
+            z-index:5;
+        }
+
+        #mainBanner .carousel-control-prev{left:18px;}
+        #mainBanner .carousel-control-next{right:18px;}
+
+        #mainBanner .carousel-control-prev-icon,
+        #mainBanner .carousel-control-next-icon{
+            filter:invert(1);
+            width:1.2rem;
+            height:1.2rem;
+        }
+
+        #mainBanner .carousel-indicators{
+            bottom:14px;
+            margin-bottom:0;
+        }
+
+        .theme-floating{
+            position:fixed;
+            z-index:850;
+            pointer-events:none;
+        }
+
+        .seagull-wrap{
+            right:18px;
+            top:118px;
+            width:120px;
+            height:80px;
+        }
+
+        .seagull{
+            position:absolute;
+            width:36px;
+            height:10px;
+            border-top:3px solid rgba(22,122,160,.92);
+            border-radius:50%;
+        }
+
+        .seagull::after{
+            content:"";
+            position:absolute;
+            left:18px;
+            width:36px;
+            height:10px;
+            border-top:3px solid rgba(22,122,160,.92);
+            border-radius:50%;
+        }
+
+        .s1{top:0; left:20px;}
+        .s2{top:20px; left:52px; transform:scale(.8);}
+        .s3{top:40px; left:2px; transform:scale(.62);}
+
+        .lighthouse-wrap{
+            left:18px;
+            bottom:26px;
+            width:120px;
+            height:230px;
+            display:none;
+        }
+
+        .lighthouse{
+            position:absolute;
+            left:32px;
+            bottom:0;
+            width:42px;
+            height:165px;
+            background:linear-gradient(#fff,#d44,#fff,#d44,#fff);
+            clip-path:polygon(24% 100%,76% 100%,67% 22%,33% 22%);
+            border-radius:4px;
+        }
+
+        .lighthouse-top{
+            position:absolute;
+            left:26px;
+            bottom:160px;
+            width:54px;
+            height:22px;
+            background:#2a3946;
+            border-radius:6px 6px 0 0;
+        }
+
+        .lighthouse-roof{
+            position:absolute;
+            left:30px;
+            bottom:178px;
+            width:46px;
+            height:16px;
+            background:#1d2730;
+            clip-path:polygon(50% 0,100% 100%,0 100%);
+        }
+
+        .beam{
+            position:absolute;
+            left:55px;
+            bottom:146px;
+            width:220px;
+            height:90px;
+            background:linear-gradient(90deg,rgba(255,255,200,.35),transparent);
+            clip-path:polygon(0 40%,100% 0,100% 100%,0 60%);
+            animation:beam 4s infinite;
+            transform-origin:left center;
+            filter:blur(1px);
+        }
+
+        @keyframes beam{
+            0%{transform:rotate(-10deg);}
+            50%{transform:rotate(10deg);}
+            100%{transform:rotate(-10deg);}
+        }
+
+        html[data-theme="light"] .seagull-wrap{display:block;}
+        html[data-theme="light"] .lighthouse-wrap{display:none;}
+        html[data-theme="dark"] .seagull-wrap{display:none;}
+        html[data-theme="dark"] .lighthouse-wrap{display:block;}
+
+        .mobile-quick-btn{
+            display:none;
+        }
+
+        .mobile-bottom-nav{
+            display:none;
+        }
+
+        html.mobile-mode .brand-wrap{
+            flex-direction:column;
+            align-items:flex-start;
+        }
+
+        html.mobile-mode .header-right{
+            width:100%;
+            justify-content:flex-start;
+        }
+
+        html.mobile-mode .brand-logo{
+            font-size:1.5rem;
+        }
+
+        html.mobile-mode .gnb{
+            border-radius:14px;
+        }
+
+        html.mobile-mode .gnb a{
+            width:50%;
+            text-align:center;
+            padding:13px 10px;
+            font-size:.95rem;
+        }
+
+        html.mobile-mode .quick-grid,
+        html.mobile-mode .facility-grid,
+        html.mobile-mode .banner-links{
+            grid-template-columns:1fr !important;
+        }
+
+        html.mobile-mode .hero-inner{
+            padding:30px 20px !important;
+        }
+
+        html.mobile-mode .hero-title{
+            font-size:1.6rem !important;
+        }
+
+        html.mobile-mode .facility-card img{
+            height:180px;
+        }
+
+        html.mobile-mode .right-fixed-menu{
+            display:none !important;
+        }
+
+        html.mobile-mode .mobile-quick-btn,
+        html.mobile-mode .mobile-bottom-nav{
+            display:flex !important;
+        }
+
+        html.mobile-mode body{
+            padding-bottom:150px;
+        }
+
+        @media (max-width: 991px){
+            .quick-grid,.facility-grid,.banner-links{
+                grid-template-columns:1fr;
+            }
+
+            .right-fixed-menu{
+                display:none!important;
+            }
+
+            .hero-title{
+                font-size:1.9rem;
+            }
+
+            .header-right{
+                justify-content:flex-start;
+                width:100%;
+            }
+
+            .brand-wrap{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .brand-logo{
+                font-size:1.5rem;
+            }
+
+            .hero-inner{
+                padding-left:28px;
+                padding-right:28px;
+            }
+
+            #mainBanner .carousel-control-prev,
+            #mainBanner .carousel-control-next{
+                width:44px;
+                height:44px;
+            }
+
+            #mainBanner .carousel-control-prev{left:10px;}
+            #mainBanner .carousel-control-next{right:10px;}
+
+            .taean-mark{
+                width:48px;
+                height:48px;
+            }
+
+            .seagull-wrap{
+                transform:scale(.8);
+                transform-origin:top right;
+                right:6px;
+                top:112px;
+            }
+
+            .lighthouse-wrap{
+                transform:scale(.8);
+                transform-origin:bottom left;
+                left:4px;
+                bottom:12px;
+            }
+
+            .gnb{
+                border-radius:14px;
+            }
+
+            .gnb a{
+                width:50%;
+                text-align:center;
+                padding:13px 10px;
+                font-size:.95rem;
+            }
+
+            .card-box{
+                border-radius:14px;
+            }
+
+            .section-title{
+                font-size:1.05rem;
+            }
+
+            .facility-card img{
+                height:180px;
+            }
+
+            .mobile-quick-btn{
+                display:flex;
+                position:fixed;
+                left:50%;
+                bottom:74px;
+                transform:translateX(-50%);
+                z-index:1200;
+                min-width:220px;
+                max-width:calc(100vw - 24px);
+                height:54px;
+                padding:0 20px;
+                align-items:center;
+                justify-content:center;
+                gap:8px;
+                border-radius:999px;
+                background:linear-gradient(90deg,var(--nav1),var(--nav2));
+                color:#fff;
+                font-weight:800;
+                font-size:1rem;
+                box-shadow:0 12px 28px rgba(0,0,0,.18);
+                border:1px solid rgba(255,255,255,.22);
+            }
+
+            .mobile-quick-btn .icon{
+                font-size:1.05rem;
+                line-height:1;
+            }
+
+            .mobile-bottom-nav{
+                display:flex;
+                position:fixed;
+                left:0;
+                right:0;
+                bottom:0;
+                z-index:1300;
+                background:rgba(255,255,255,.94);
+                backdrop-filter:blur(12px);
+                border-top:1px solid var(--line);
+                box-shadow:0 -8px 18px rgba(0,0,0,.08);
+            }
+
+            html[data-theme="dark"] .mobile-bottom-nav{
+                background:rgba(18,32,44,.96);
+            }
+
+            .mobile-bottom-nav a{
+                flex:1;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                justify-content:center;
+                gap:4px;
+                height:64px;
+                color:var(--muted);
+                font-size:.78rem;
+                font-weight:800;
+            }
+
+            .mobile-bottom-nav a.active{
+                color:var(--brand);
+            }
+
+            .mobile-bottom-nav .m-icon{
+                font-size:1.05rem;
+                line-height:1;
+            }
+
+            body{
+                padding-bottom:150px;
+            }
+            .container{
+                padding-left:14px;
+                padding-right:14px;
+            }
+
+            .header-right{
+                gap:8px;
+            }
+
+            .mini-badge{
+                font-size:.78rem;
+                padding:6px 10px;
+            }
+
+            .sns-wrap{
+                gap:8px;
+            }
+
+            .sns-icon{
+                width:38px;
+                height:38px;
+                font-size:.9rem;
+            }
+
+            .hour-box{
+                min-width:68px;
+                padding:6px 8px;
+                font-size:.82rem;
+            }
+
+            .time-btn:hover{
+                transform:none;
+            }
+
+            .collapse .card-box{
+                padding:14px !important;
+            }
+
+            .reserve-facility-img{
+                min-height:180px !important;
+                max-height:220px;
+            }
+        }
+    </style>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div id="top"></div>
+
+    <div class="theme-floating seagull-wrap">
+        <div class="seagull s1"></div>
+        <div class="seagull s2"></div>
+        <div class="seagull s3"></div>
+    </div>
+
+    <div class="theme-floating lighthouse-wrap">
+        <div class="lighthouse"></div>
+        <div class="lighthouse-top"></div>
+        <div class="lighthouse-roof"></div>
+        <div class="beam"></div>
+    </div>
+
+    <div class="topbar">
+        <div class="container d-flex justify-content-end py-2">
+            
+            <a href="{{ url_for('my_reservations') }}">예약조회</a>
+            <a href="{{ url_for('admin_login') }}">관리자</a>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div class="container brand-wrap">
+            <div class="brand-left">
+                <a href="{{ url_for('home') }}" class="brand-link">
+                    <div class="mark-shell">
+                        <img
+                            src="{{ url_for('static', filename='taean-mark.png') }}"
+                            alt="태안군 마크"
+                            class="taean-mark"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+                        <div class="mark-fallback">TAE<br>AN</div>
+                    </div>
+                    <div>
+                        <div class="brand-logo">태안군청소년수련관</div>
+                        <div class="brand-sub">Taean Youth Center</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="header-right">
+                <span class="mini-badge">운영시간 09:00 ~ 21:00</span>
+                <span class="mini-badge">정기휴관 월요일</span>
+                <button type="button" class="theme-toggle" id="themeToggle">🌙 다크모드</button>
+                <button type="button" class="theme-toggle" id="mobileToggle">📱 모바일모드</button>
+                <div class="sns-wrap">
+                    <a href="https://open.kakao.com/o/gYRua6fi" target="_blank" class="sns-icon sns-kakao" title="오픈카카오톡">K</a>
+                    <a href="https://band.us/n/a0a5Afs8l861R" target="_blank" class="sns-icon sns-band" title="밴드">B</a>
+                    <a href="https://www.instagram.com/taean_cjungus/" target="_blank" class="sns-icon sns-insta" title="인스타그램">I</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="container gnb-wrap">
+        <div class="gnb">
+            <div class="gnb-menu">
+
+                <div class="gnb-item">
+                    <div class="gnb-main">수련관 소개</div>
+                    <div class="mega-menu">
+                        <div class="mega-inner">
+                            <div>
+                                
+                                <ul class="mega-links">
+                                    <li><a href="{{ url_for('intro_greeting') }}">인사말</a></li>
+                                    <li><a href="{{ url_for('intro_guide') }}">운영안내</a></li>
+                                    <li><a href="{{ url_for('intro_hours') }}">운영시간</a></li>
+                                    <li><a href="{{ url_for('intro_location') }}">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gnb-item">
+                    <div class="gnb-main">청소년활동</div>
+                    <div class="mega-menu">
+                        <div class="mega-inner">
+                            <div>
+                                
+                                <ul class="mega-links">
+                                    <li><a href="{{ url_for('programs_current') }}">진행 프로그램</a></li>
+                                    <li><a href="{{ url_for('programs_open') }}">모집중 프로그램</a></li>
+                                    <li><a href="{{ url_for('activity_gallery') }}">활동사진</a></li>
+                                    <li><a href="{{ url_for('monthly_schedule') }}">월간일정</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gnb-item">
+                    <div class="gnb-main">프로그램 신청</div>
+                    <div class="mega-menu">
+                        <div class="mega-inner">
+                            <div>
+                                
+                                <ul class="mega-links">
+                                    <li><a href="{{ url_for('program_apply') }}">프로그램 신청</a></li>
+                                    <li><a href="{{ url_for('program_apply_lookup') }}">신청 내역 조회</a></li>
+                                    <li><a href="{{ url_for('calendar_view') }}">예약 가능 일정</a></li>
+                                    <li><a href="{{ url_for('program_apply_guide') }}">참가 신청 안내</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gnb-item">
+                    <div class="gnb-main">시설안내</div>
+                    <div class="mega-menu">
+                        <div class="mega-inner">
+                            <div>
+                                
+                                <ul class="mega-links">
+                                    <li><a href="{{ url_for('facility_info') }}">시설 소개</a></li>
+                                    <li><a href="{{ url_for('facility_guide') }}">대관 안내</a></li>
+                                    <li><a href="{{ url_for('calendar_view') }}">월간 현황</a></li>
+                                    <li><a href="{{ url_for('my_reservations') }}">예약 조회</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gnb-item">
+                    <div class="gnb-main">알림마당</div>
+                    <div class="mega-menu">
+                        <div class="mega-inner">
+                            <div>
+                                
+                                <ul class="mega-links">
+                                    <li><a href="{{ url_for('notices') }}">공지사항</a></li>
+                                    <li><a href="{{ url_for('faq') }}">자주 묻는 질문</a></li>
+                                    <li><a href="{{ url_for('contact') }}">문의 안내</a></li>
+                                    <li><a href="{{ url_for('newsletter') }}">소식지</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="right-fixed-menu">
+        <a href="{{ url_for('notices') }}"><span class="icon">👥</span>부서안내</a>
+        <a href="{{ url_for('reserve_page') }}"><span class="icon">📝</span>참가신청</a>
+        <a href="{{ url_for('calendar_view') }}"><span class="icon">📅</span>대관현황</a>
+        <a href="{{ url_for('my_reservations') }}"><span class="icon">✉️</span>예약조회</a>
+    </div>
+
+    <main class="main-container">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="fw-bold mb-2">태안군청소년수련관</div>
+            <div>대표자: 홍길동 | 전화번호: 041-670-2490</div>
+            <div>충청남도 태안군 태안읍 백화로 199</div>
+            <div>청소년 문화·교육·체험 활동 지원</div>
+            <div class="mt-2">운영시간 09:00 ~ 21:00 / 정기휴관일 매주 월요일</div>
+        </div>
+    </footer>
+
+    <a href="{{ url_for('reserve_page') }}" class="mobile-quick-btn">
+        <span class="icon">📅</span>
+        <span>모바일 빠른예약</span>
+    </a>
+
+    <nav class="mobile-bottom-nav">
+        <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">
+            <span class="m-icon">🏠</span>
+            <span>홈</span>
+        </a>
+        <a href="{{ url_for('reserve_page') }}" class="{% if request.endpoint == 'reserve_page' or request.endpoint == 'reserve' %}active{% endif %}">
+            <span class="m-icon">📅</span>
+            <span>예약</span>
+        </a>
+        <a href="{{ url_for('calendar_view') }}" class="{% if request.endpoint == 'calendar_view' %}active{% endif %}">
+            <span class="m-icon">🗓️</span>
+            <span>현황</span>
+        </a>
+        <a href="{{ url_for('my_reservations') }}" class="{% if request.endpoint == 'my_reservations' %}active{% endif %}">
+            <span class="m-icon">🔎</span>
+            <span>조회</span>
+        </a>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    (function () {
+        const root = document.documentElement;
+        const themeBtn = document.getElementById("themeToggle");
+        const mobileBtn = document.getElementById("mobileToggle");
+
+        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedMobile = localStorage.getItem("mobileMode") || "off";
+
+        root.setAttribute("data-theme", savedTheme);
+        themeBtn.textContent = savedTheme === "dark" ? "☀️ 라이트모드" : "🌙 다크모드";
+
+        if (savedMobile === "on") {
+            root.classList.add("mobile-mode");
+            mobileBtn.textContent = "💻 기본모드";
+        } else {
+            root.classList.remove("mobile-mode");
+            mobileBtn.textContent = "📱 모바일모드";
+        }
+
+        themeBtn.addEventListener("click", function () {
+            const current = root.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            root.setAttribute("data-theme", next);
+            localStorage.setItem("theme", next);
+            themeBtn.textContent = next === "dark" ? "☀️ 라이트모드" : "🌙 다크모드";
+        });
+
+        mobileBtn.addEventListener("click", function () {
+            if (root.classList.contains("mobile-mode")) {
+                root.classList.remove("mobile-mode");
+                localStorage.setItem("mobileMode", "off");
+                mobileBtn.textContent = "📱 모바일모드";
+            } else {
+                root.classList.add("mobile-mode");
+                localStorage.setItem("mobileMode", "on");
+                mobileBtn.textContent = "💻 기본모드";
+            }
+        });
+
+        const gnbItems = document.querySelectorAll(".gnb-item");
+
+        gnbItems.forEach(item => {
+            const main = item.querySelector(".gnb-main");
+            const submenu = item.querySelector(".mega-menu");
+
+            if (!main || !submenu) return;
+
+            main.addEventListener("click", function (e) {
+                if (window.innerWidth > 991) return;
+
+                e.preventDefault();
+
+                gnbItems.forEach(other => {
+                    if (other !== item) {
+                        other.classList.remove("open");
+                    }
+                });
+
+                item.classList.toggle("open");
+            });
+        });
+
+        document.addEventListener("click", function (e) {
+            if (window.innerWidth > 991) return;
+
+            if (!e.target.closest(".gnb")) {
+                gnbItems.forEach(item => item.classList.remove("open"));
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
