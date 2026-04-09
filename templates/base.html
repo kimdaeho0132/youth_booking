@@ -355,6 +355,56 @@
             color:var(--text);
         }
 
+        .notice-item{
+            padding:8px 0;
+            border-bottom:1px solid rgba(128,128,128,.11);
+        }
+
+        .notice-item:last-child{
+            border-bottom:none;
+        }
+
+        .notice-line{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            min-width:0;
+        }
+
+        .notice-badge{
+            display:inline-block;
+            padding:3px 10px;
+            border-radius:999px;
+            background-color:#dc3545 !important;
+            color:#ffffff !important;
+            font-size:12px !important;
+            font-weight:800 !important;
+            line-height:1.2;
+            white-space:nowrap;
+            flex-shrink:0;
+        }
+
+        .notice-link{
+            display:block;
+            flex:1;
+            min-width:0;
+            color:inherit;
+        }
+
+        .notice-title{
+            display:block;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            font-weight:600;
+        }
+
+        .notice-date{
+            margin-top:4px;
+            font-size:.78rem;
+            color:var(--muted);
+        }
+
         @media (max-width: 991px){
             .gnb{
                 border-radius:14px;
@@ -527,23 +577,34 @@
             margin-bottom:10px;
         }
 
-        .board-box ul{
+       .board-box ul{
             list-style:none;
             margin:0;
             padding:0;
+            min-height:220px; /* 높이 안정 */
         }
 
         .board-box li{
-            display:flex;
-            justify-content:space-between;
-            gap:12px;
-            padding:9px 0;
+            display:block; /* flex 제거 */
+            padding:8px 0;
             border-bottom:1px solid rgba(128,128,128,.11);
         }
 
         .board-box li:last-child{
             border-bottom:none;
         }
+
+        /* 제목 */
+        .board-box li a{
+            display:block;
+            font-weight:600;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+
+        /* 날짜 */
+
 
         .quick-grid{
             display:grid;
@@ -1157,7 +1218,83 @@
                 min-height:180px !important;
                 max-height:220px;
             }
-        }
+
+            .selected-time{
+                background:#14789c !important;
+                color:#fff !important;
+                border:2px solid #0d5c79 !important;
+            }
+
+            .board-box.notice-board li a{
+                display:block;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                max-width:100%;
+            }
+
+            .board-box.notice-board li .notice-title{
+                display:inline-block;
+                max-width:100%;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                vertical-align:middle;
+            }
+            .notice-item{
+                padding:8px 0;
+                border-bottom:1px solid rgba(128,128,128,.11);
+            }
+
+            .notice-item:last-child{
+                border-bottom:none;
+            }
+
+            .notice-line{
+                display:flex;
+                align-items:center;
+                gap:8px;
+                min-width:0;
+            }
+
+            .notice-badge{
+                display:inline-block;
+                padding:3px 10px;
+                border-radius:999px;
+                background-color:#dc3545 !important;
+                color:#ffffff !important;
+                font-size:12px !important;
+                font-weight:800 !important;
+                line-height:1.2;
+                white-space:nowrap;
+                flex-shrink:0;
+            }
+
+            .notice-link{
+                display:block;
+                flex:1;
+                min-width:0;
+                color:inherit;
+            }
+
+            .notice-title{
+                display:block;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                font-weight:600;
+            }
+
+            .notice-date{
+                margin-top:4px;
+                font-size:.78rem;
+                color:var(--muted);
+            }
+
+           
+            
+
+        }        
     </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -1298,6 +1435,7 @@
                                 
                                 <ul class="mega-links">
                                     <li><a href="{{ url_for('notices') }}">공지사항</a></li>
+                                    <li><a href="{{ url_for('free_board') }}">자유게시판</a></li>
                                     <li><a href="{{ url_for('faq') }}">자주 묻는 질문</a></li>
                                     <li><a href="{{ url_for('contact') }}">문의 안내</a></li>
                                     <li><a href="{{ url_for('newsletter') }}">소식지</a></li>

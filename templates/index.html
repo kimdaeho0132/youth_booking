@@ -211,14 +211,26 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".time-btn").forEach(btn => {
+
         btn.addEventListener("click", function () {
+
+            // 기존 선택 제거
+            document.querySelectorAll(".time-btn").forEach(b => {
+                b.classList.remove("selected-time");
+            });
+
+            // 선택 표시
+            this.classList.add("selected-time");
+
             const hour = this.dataset.hour;
             const fid = this.dataset.fid;
 
             const form = document.querySelector(`#form-${fid}`);
-            if (!form) return;
+            if (!form) return; // ⭐ 안전장치
 
-            new bootstrap.Collapse(form, { toggle: true });
+            // 폼 열기 (닫혀있을 때만)
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(form);
+            bsCollapse.show();
 
             const startSelect = form.querySelector("select[name='start_hour']");
             const endSelect = form.querySelector("select[name='end_hour']");
@@ -226,10 +238,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (startSelect) startSelect.value = hour;
             if (endSelect) endSelect.value = parseInt(hour) + 1;
 
+            // 스크롤 이동 (UX 개선)
             form.scrollIntoView({ behavior: "smooth", block: "center" });
         });
+
     });
 });
 </script>
-
 {% endblock %}

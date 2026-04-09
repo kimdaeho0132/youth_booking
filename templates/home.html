@@ -15,7 +15,13 @@
                 <div class="hero-inner">
                     <div class="hero-title">{{ b.title }}</div>
                     <div class="hero-desc">{{ b.desc }}</div>
-                    <a href="{{ b.link }}" class="btn btn-main">{{ b.button }}</a>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ url_for('reserve_page') }}" class="btn btn-main">
+                            {{ b.button }}
+
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,29 +37,33 @@
 </div>
 
 <div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="card-box p-4 board-box h-100">
+    <div class="col-lg-4">
+        <div class="card-box p-4 board-box notice-board h-100">
             <div class="tab-head">
                 <div class="section-title mb-0">공지사항</div>
                 <a href="{{ url_for('notices') }}" class="small-muted">more +</a>
             </div>
             <ul>
-                {% for n in notices %}
-                <li>
-                    <a href="{{ url_for('notice_detail', nid=n.id) }}">
+                {% for n in notices[:5] %}
+                <li class="notice-item">
+                    <div class="notice-line">
                         {% if n.is_pinned %}
-                        <span class="badge text-bg-danger me-2">중요</span>
+                        <span class="notice-badge">중요</span>
                         {% endif %}
-                        [{{ n.category }}] {{ n.title }}
-                    </a>
-                    <span class="small-muted">{{ n.created_at }}</span>
+
+                        <a href="{{ url_for('notice_detail', nid=n.id) }}" class="notice-link">
+                            <span class="notice-title">[{{ n.category }}] {{ n.title }}</span>
+                        </a>
+                    </div>
+
+                    <div class="notice-date">{{ n.created_at }}</div>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="card-box p-4 board-box h-100">
             <div class="tab-head">
                 <div class="section-title mb-0">이용안내</div>
@@ -65,6 +75,37 @@
                 <li><span>예약가능</span><span class="small-muted">오늘부터 30일 이내</span></li>
                 <li><span>최대예약</span><span class="small-muted">1회 4시간</span></li>
                 <li><span>온라인 취소</span><span class="small-muted">이용일 1일 전까지</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card-box p-4 board-box h-100">
+            <div class="tab-head">
+                <div class="section-title mb-0">자유게시판</div>
+                <a href="{{ url_for('free_board') }}" class="small-muted">more +</a>
+            </div>
+            <ul>
+                <li>
+                    <a href="{{ url_for('free_board') }}">자유게시판이 준비되었습니다.</a>
+                    <span class="small-muted">NEW</span>
+                </li>
+                <li>
+                    <a href="{{ url_for('free_board') }}">이용 후기와 의견을 남겨보세요.</a>
+                    <span class="small-muted">안내</span>
+                </li>
+                <li>
+                    <a href="{{ url_for('free_board') }}">시설 이용 관련 소통 공간입니다.</a>
+                    <span class="small-muted">안내</span>
+                </li>
+                <li>
+                    <a href="{{ url_for('free_board') }}">운영 규칙을 확인해 주세요.</a>
+                    <span class="small-muted">필독</span>
+                </li>
+                <li>
+                    <a href="{{ url_for('free_board') }}">게시글 작성 기능은 추후 연동 가능합니다.</a>
+                    <span class="small-muted">예정</span>
+                </li>
             </ul>
         </div>
     </div>

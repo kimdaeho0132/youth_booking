@@ -1091,6 +1091,9 @@ def facility_guide():
     return render_template("facility_guide.html")
 
 #=== 알림마당 ====
+@app.route("/free-board")
+def free_board():
+    return render_template("free_board.html")
 
 @app.route("/faq")
 def faq():

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-box p-4 mb-4" style="background:linear-gradient(90deg,#eef9fc,#ffffff);">
+    <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+            <div class="section-title mb-2">자유게시판</div>
+            <div class="small-muted">
+                수련관 이용 후기, 건의사항, 자유로운 의견을 나눌 수 있는 공간입니다.
+            </div>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <button class="btn btn-outline-primary" type="button" disabled>글쓰기 (추후 지원)</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-box p-4 board-box">
+    <div class="tab-head">
+        <div class="section-title mb-0">게시판 안내</div>
+        <span class="small-muted">Board</span>
+    </div>
+    <ul>
+        <li>
+            <span>[안내] 자유게시판이 새로 개설되었습니다.</span>
+            <span class="small-muted">2026-04-09</span>
+        </li>
+        <li>
+            <span>[안내] 비방, 욕설, 광고성 게시글은 제한될 수 있습니다.</span>
+            <span class="small-muted">2026-04-09</span>
+        </li>
+        <li>
+            <span>[안내] 시설 이용 후기와 제안사항을 자유롭게 남겨주세요.</span>
+            <span class="small-muted">2026-04-09</span>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}
